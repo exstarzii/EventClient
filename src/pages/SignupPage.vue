@@ -17,62 +17,74 @@
 
 <script setup lang="ts">
 import FooterComp from 'src/components/FooterComp.vue'
-import { store } from 'src/store'
-import { User } from '../components/models'
 import { useRouter } from 'vue-router';
-import { computed, ref } from 'vue';
 import { useQuasar } from 'quasar'
 import axios from 'axios'
+import { ref } from 'vue';
 
-const props = defineProps({
-    username: String,
-    email: String,
-    phone: String,
-    about: String,
-    password: String,
-    updateMod: Boolean,
-})
 const router = useRouter()
 const $q = useQuasar()
 const nickname = ref('')
 const phone = ref('')
 
 function onSubmit() {
-    axios.post(process.env.VUE_APP_BASE_URL + "/user", {
+    axios.post(process.env.VUE_APP_BASE_URL + '/user', {
         nickname: nickname.value,
         phone: phone.value,
     }).then(response => {
         console.log(response);
         if (response.status == 201) {
-            $q.notify("Account created");
+            $q.notify('Account created');
+            router.push({ path: '/userinfo?nickname=' + nickname.value });
         }
     }).catch((error) => {
         console.log(error.response);
         if (error.response.status == 404) {
             $q.notify({
-                color: "negative",
-                icon: "report_problem",
-                message: "The server is not available",
+                color: 'negative',
+                icon: 'report_problem',
+                message: 'The server is not available',
             });
         }
         else {
             error.response.data.message.forEach((mes: string) => {
                 $q.notify({
-                    color: "negative",
-                    icon: "report_problem",
+                    color: 'negative',
+                    icon: 'report_problem',
                     message: mes,
                 });
             });
         }
     });
 }
-function onReset() {
-    // update component state
-    email.value = "";
-    username.value = "";
-    phone.value = "";
-    about.value = "";
-    password.value = "";
+function PhoneVerify() {
+    axios.post(process.env.VUE_APP_BASE_URL + '/user/phoneVerify', {
+        nickname: nickname.value,
+    }).then(response => {
+        console.log(response);
+        if (response.status == 201) {
+            $q.notify('Account created');
+            router.push({ path: '/userinfo?nickname=' + nickname.value });
+        }
+    }).catch((error) => {
+        console.log(error.response);
+        if (error.response.status == 404) {
+            $q.notify({
+                color: 'negative',
+                icon: 'report_problem',
+                message: 'The server is not available',
+            });
+        }
+        else {
+            error.response.data.message.forEach((mes: string) => {
+                $q.notify({
+                    color: 'negative',
+                    icon: 'report_problem',
+                    message: mes,
+                });
+            });
+        }
+    });
 }
 </script>
 

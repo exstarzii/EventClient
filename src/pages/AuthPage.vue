@@ -15,7 +15,7 @@
 <script setup>
 import FooterComp from 'src/components/FooterComp.vue';
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar'
 import axios from 'axios'
 
@@ -23,6 +23,12 @@ const router = useRouter()
 const nickname = ref('')
 const code = ref('')
 const $q = useQuasar()
+onMounted(() => {
+    console.log(router.currentRoute.value.query);
+    if (router.currentRoute.value.query.nickname) {
+        nickname.value = router.currentRoute.value.query.nickname
+    }
+})
 
 function onSubmit() {
     console.log({
@@ -35,8 +41,6 @@ function onSubmit() {
     }).then(response => {
         console.log(response);
         $q.notify('Logged');
-        //store.token = response.data.access_token;
-        // const $q = useQuasar()
         $q.cookies.set('token', response.data.access_token)
         router.push({ path: '/userinfo' });
     }).catch((error) => {
