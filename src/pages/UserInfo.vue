@@ -85,6 +85,26 @@ onMounted(() => {
     rows.value[5].col2 = response.data.sex
     rows.value[6].col2 = response.data.city
     rows.value[7].col2 = response.data.about
+  }).catch((error) => {
+    if (!error.status) {
+      $q.notify({
+        color: 'negative',
+        icon: 'report_problem',
+        message: 'The server is not available',
+      })
+    } else if (error.response.status == 401) {
+      $q.notify({
+        color: 'negative',
+        icon: 'report_problem',
+        message: 'You are not logged in',
+      })
+    } else if (error.response.status == 404) {
+      $q.notify({
+        color: 'negative',
+        icon: 'report_problem',
+        message: 'The server is not available',
+      })
+    }
   })
 })
 

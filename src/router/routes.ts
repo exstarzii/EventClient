@@ -30,6 +30,20 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('src/pages/UpdateUserPage.vue') },
     ],
   },
+  {
+    path: '/events',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/EventsPage.vue') },
+    ],
+  },
+  {
+    path: '/eventsex',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('src/pages/EventsPageExample.vue') },
+    ],
+  },
   // Always leave this as last one,
   // but you can also remove it
   {

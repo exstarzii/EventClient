@@ -2,48 +2,26 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-           Test Auth Service
+          Test Auth Service
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
+        <q-item-label header>
           Login or Signup
         </q-item-label>
-        <template  v-if="store.token.length==0">
-          <EssentialLink
-            v-for="link in essentialLinks"
-            :key="link.title"
-            v-bind="link"
-            
-          />
+        <template v-if="token === ''">
+          <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
         </template>
         <template v-else>
-          <EssentialLink
-            v-for="link in authlinksList"
-            :key="link.title"
-            v-bind="link"
-          />
+          <EssentialLink v-for="link in authlinksList" :key="link.title" v-bind="link" />
         </template>
       </q-list>
     </q-drawer>
@@ -54,12 +32,14 @@
   </q-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
 import EssentialLink from 'components/EssentialLink.vue';
-import { store } from '../store';
+import { useQuasar } from 'quasar'
 
-const linksList = [
+const $q = useQuasar()
+
+const essentialLinks = ref([
   {
     title: 'Authorization',
     icon: 'login',
@@ -70,47 +50,37 @@ const linksList = [
     icon: 'person_add',
     link: '/#/signup',
   },
-];
-const authlinksList = [
+])
+const authlinksList = ref([
   {
     title: 'Account details',
     icon: 'person',
     link: '/#/userinfo',
   },
   {
+    title: 'Events',
+    icon: 'map',
+    link: '/#/events',
+  },
+  {
     title: 'Log out',
     icon: 'logout',
     link: '/#/',
-    onClick: ()=>{
-      store.token='';
+    onClick: () => {
+      $q.cookies.set('token', '')
+      token.value = ''
     }
   },
-];
+])
+onMounted(() => {
+  token.value = $q.cookies.get('token')
+  // console.log(token.value)
+})
 
-export default defineComponent({
-  name: 'MainLayout',
+const leftDrawerOpen = ref(false)
+const token = ref('')
 
-  components: {
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-
-    return {
-      essentialLinks: linksList,
-      authlinksList: authlinksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-      
-    }
-  },
-  data(){
-    return{
-      store
-    }
-  }
-});
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
 </script>

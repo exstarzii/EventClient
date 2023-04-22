@@ -35,36 +35,7 @@ function onSubmit() {
         console.log(response);
         if (response.status == 201) {
             $q.notify('Account created');
-            router.push({ path: '/userinfo?nickname=' + nickname.value });
-        }
-    }).catch((error) => {
-        console.log(error.response);
-        if (error.response.status == 404) {
-            $q.notify({
-                color: 'negative',
-                icon: 'report_problem',
-                message: 'The server is not available',
-            });
-        }
-        else {
-            error.response.data.message.forEach((mes: string) => {
-                $q.notify({
-                    color: 'negative',
-                    icon: 'report_problem',
-                    message: mes,
-                });
-            });
-        }
-    });
-}
-function PhoneVerify() {
-    axios.post(process.env.VUE_APP_BASE_URL + '/user/phoneVerify', {
-        nickname: nickname.value,
-    }).then(response => {
-        console.log(response);
-        if (response.status == 201) {
-            $q.notify('Account created');
-            router.push({ path: '/userinfo?nickname=' + nickname.value });
+            router.push({ path: '/auth', query: { nickname: nickname.value } });
         }
     }).catch((error) => {
         console.log(error.response);
