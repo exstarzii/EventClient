@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/events',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/EventLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/EventsPage.vue') },
     ],
