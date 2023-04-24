@@ -27,8 +27,8 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar'
-import axios from 'axios'
 import { onMounted, ref } from 'vue';
+import api from 'src/api.js';
 
 const router = useRouter()
 const $q = useQuasar()
@@ -47,24 +47,20 @@ const selectedFile = ref('')
 const fileInput = ref('')
 
 onMounted(() => {
-  token.value = $q.cookies.get('token')
-  axios.get(process.env.VUE_APP_BASE_URL + '/user', {
-    headers: {
-      Authorization: 'Bearer ' + token.value
-    }
-  }).then(response => {
-    console.log(response);
-    nickname.value = response.data.nickname
-    photo.value = response.data.photo
-    name.value = response.data.name
-    surename.value = response.data.surename
-    email.value = response.data.email
-    age.value = response.data.age
-    phone.value = response.data.phone
-    sex.value = response.data.sex
-    city.value = response.data.city
-    about.value = response.data.about
-  })
+  api.getUser($q)
+    .then(response => {
+      console.log(response);
+      nickname.value = response.data.nickname
+      photo.value = response.data.photo
+      name.value = response.data.name
+      surename.value = response.data.surename
+      email.value = response.data.email
+      age.value = response.data.age
+      phone.value = response.data.phone
+      sex.value = response.data.sex
+      city.value = response.data.city
+      about.value = response.data.about
+    })
 })
 const handleFileUpload = (event) => {
   selectedFile.value = event.target.files[0];
@@ -78,45 +74,16 @@ const chooseFile = (event) => {
   fileInput.value.click();
 };
 function onSubmit() {
-  axios.put(process.env.VUE_APP_BASE_URL + '/user', {
-    nickname: nickname.value,
-    phone: phone.value,
-    photo: photo.value,
-    name: name.value,
-    surename: surename.value,
-    email: email.value,
-    age: age.value,
-    sex: sex.value,
-    city: city.value,
-    about: about.value,
-  }, {
-    headers: {
-      Authorization: 'Bearer ' + token.value
-    },
-  }).then(response => {
-    console.log(response);
-    if (response.status == 200) {
-      $q.notify('saved');
-      router.push({ path: '/userinfo' });
-    }
-  }).catch((error) => {
-    console.log(error.response);
-    if (error.response.status == 404) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'The server is not available',
-      });
-    }
-    else {
-      error.response.data.message.forEach((mes) => {
-        $q.notify({
-          color: 'negative',
-          icon: 'report_problem',
-          message: mes,
-        });
-      });
-    }
-  });
+  api.updateUser($q, router,
+    nickname.value,
+    phone.value,
+    photo.value,
+    name.value,
+    surename.value,
+    email.value,
+    age.value,
+    sex.value,
+    city.value,
+    about.value)
 }
 </script>

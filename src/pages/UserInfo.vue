@@ -16,16 +16,13 @@
   </q-page>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useQuasar } from 'quasar';
-import { useRouter } from 'vue-router';
-import axios from 'axios'
 import { computed, onMounted, ref } from 'vue';
+import api from 'src/api.js';
 
 const $q = useQuasar()
-const router = useRouter()
 const nickname = ref('')
-const token = ref('')
 const photo = ref('')
 const rows = ref([
   {
@@ -68,44 +65,21 @@ const ShownRows = computed(() => {
 })
 
 onMounted(() => {
-  token.value = $q.cookies.get('token')
-  axios.get(process.env.VUE_APP_BASE_URL + '/user', {
-    headers: {
-      Authorization: 'Bearer ' + token.value
-    }
-  }).then(response => {
-    console.log(response);
-    nickname.value = response.data.nickname
-    photo.value = response.data.photo
-    rows.value[0].col2 = response.data.name
-    rows.value[1].col2 = response.data.surename
-    rows.value[2].col2 = response.data.email
-    rows.value[3].col2 = response.data.age
-    rows.value[4].col2 = response.data.phone
-    rows.value[5].col2 = response.data.sex
-    rows.value[6].col2 = response.data.city
-    rows.value[7].col2 = response.data.about
-  }).catch((error) => {
-    if (!error.status) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'The server is not available',
-      })
-    } else if (error.response.status == 401) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'You are not logged in',
-      })
-    } else if (error.response.status == 404) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'The server is not available',
-      })
-    }
-  })
+
+  api.getUser($q)
+    .then(response => {
+      console.log(response);
+      nickname.value = response.data.nickname
+      photo.value = response.data.photo
+      rows.value[0].col2 = response.data.name
+      rows.value[1].col2 = response.data.surename
+      rows.value[2].col2 = response.data.email
+      rows.value[3].col2 = response.data.age
+      rows.value[4].col2 = response.data.phone
+      rows.value[5].col2 = response.data.sex
+      rows.value[6].col2 = response.data.city
+      rows.value[7].col2 = response.data.about
+    })
 })
 
 function Confirm() {
@@ -119,31 +93,7 @@ function Confirm() {
   })
 }
 function Delete() {
-  axios.delete(process.env.VUE_APP_BASE_URL + '/user', {
-    headers: {
-      Authorization: 'Bearer ' + token.value
-    }
-  }).then(response => {
-    console.log(response);
-    $q.notify('Account has been deleted');
-    token.value = '';
-    $q.cookies.set('token', '')
-    router.push({ path: '/' });
-  }).catch((error) => {
-    if (error.response.status == 401) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'You are not logged in',
-      })
-    } else if (error.response.status == 404) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'The server is not available',
-      })
-    }
-  })
+  api.deleteUser($q)
 }
 
 </script>

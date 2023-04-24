@@ -17,14 +17,13 @@ import FooterComp from 'src/components/FooterComp.vue';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar'
-import axios from 'axios'
+import api from 'src/api.js';
 
 const router = useRouter()
 const nickname = ref('')
 const code = ref('')
 const $q = useQuasar()
 onMounted(() => {
-    console.log(router.currentRoute.value.query);
     if (router.currentRoute.value.query.nickname) {
         nickname.value = router.currentRoute.value.query.nickname
     }
@@ -35,30 +34,6 @@ function onSubmit() {
         nickname: nickname.value,
         code: code.value
     })
-    axios.post(process.env.VUE_APP_BASE_URL + '/user/login', {
-        nickname: nickname.value,
-        code: code.value
-    }).then(response => {
-        console.log(response);
-        $q.notify('Logged');
-        $q.cookies.set('token', response.data.access_token)
-        router.push({ path: '/userinfo' });
-    }).catch((error) => {
-        console.log(error)
-        if (error.response.status == 401) {
-            $q.notify({
-                color: 'negative',
-                icon: 'report_problem',
-                message: 'Wrong login or password',
-            });
-        }
-        else if (error.response.status == 404) {
-            $q.notify({
-                color: 'negative',
-                icon: 'report_problem',
-                message: 'The server is not available',
-            });
-        }
-    });
+    api.loginUser($q, router, nickname.value, code.value);
 }
 </script>

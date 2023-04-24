@@ -19,8 +19,8 @@
 import FooterComp from 'src/components/FooterComp.vue'
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar'
-import axios from 'axios'
 import { ref } from 'vue';
+import api from 'src/api.js';
 
 const router = useRouter()
 const $q = useQuasar()
@@ -28,34 +28,7 @@ const nickname = ref('')
 const phone = ref('')
 
 function onSubmit() {
-    axios.post(process.env.VUE_APP_BASE_URL + '/user', {
-        nickname: nickname.value,
-        phone: phone.value,
-    }).then(response => {
-        console.log(response);
-        if (response.status == 201) {
-            $q.notify('Account created');
-            router.push({ path: '/auth', query: { nickname: nickname.value } });
-        }
-    }).catch((error) => {
-        console.log(error.response);
-        if (error.response.status == 404) {
-            $q.notify({
-                color: 'negative',
-                icon: 'report_problem',
-                message: 'The server is not available',
-            });
-        }
-        else {
-            error.response.data.message.forEach((mes: string) => {
-                $q.notify({
-                    color: 'negative',
-                    icon: 'report_problem',
-                    message: mes,
-                });
-            });
-        }
-    });
+    api.createUser($q, router, nickname.value, phone.value);
 }
 </script>
 
