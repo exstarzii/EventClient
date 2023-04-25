@@ -53,6 +53,7 @@
 
     <q-page-container>
       <router-view />
+      <slot></slot>
     </q-page-container>
   </q-layout>
 </template>
@@ -60,7 +61,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar'
-import axios from 'axios'
+import api from 'src/api.js';
 // author?: mongoose.Types.ObjectId;
 // participants?: [mongoose.Types.ObjectId];
 // _id?: string;
@@ -106,7 +107,7 @@ const chooseFile = (event) => {
   fileInput.value.click();
 };
 function onSubmit() {
-  axios.post(process.env.VUE_APP_BASE_URL + '/event', {
+  const body = {
     // author?: mongoose.Types.ObjectId; optional need to del
     participants: participants.value,
     // _id?: string; optional need to del
@@ -117,34 +118,8 @@ function onSubmit() {
     category: category.value,
     images: photo.value,
     description: description.value,
-  }, {
-    headers: {
-      Authorization: 'Bearer ' + token.value
-    },
-  }).then(response => {
-    console.log(response);
-    if (response.status == 201) {
-      $q.notify('saved');
-    }
-  }).catch((error) => {
-    console.log(error.response);
-    if (error.response.status == 404) {
-      $q.notify({
-        color: 'negative',
-        icon: 'report_problem',
-        message: 'The server is not available',
-      });
-    }
-    else {
-      error.response.data.message.forEach((mes) => {
-        $q.notify({
-          color: 'negative',
-          icon: 'report_problem',
-          message: mes,
-        });
-      });
-    }
-  });
+  }
+  api.createEvent($q, body);
 }
 </script>
 <style lang="scss">

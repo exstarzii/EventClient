@@ -1,12 +1,15 @@
 <template>
+    <event-drawer ref="eventDrawer"></event-drawer>
     <!-- <div style="height:500px; width:700px"> -->
     <l-map ref="map" :zoom="zoom" :center="center" :use-global-leaflet="false" @ready="setLocation">
         <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap">
         </l-tile-layer>
-        <l-marker v-for="(marker, index) in events" :key="index" :lat-lng="marker.location.coordinates" :draggable="true">
-            <l-tooltip> {{ marker.name }} </l-tooltip>
+        <l-marker v-for="(event, index) in events" :key="index" :lat-lng="event.location.coordinates"
+            @click="() => { showEvent(index) }"><!--:draggable="true"  -->
+            <l-tooltip> {{ event.name }} </l-tooltip>
         </l-marker>
     </l-map>
+
     <!-- </div> -->
 </template>
   
@@ -16,21 +19,19 @@ import { ref, onMounted } from 'vue';
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import { useQuasar } from 'quasar';
 import axios from 'axios'
+import EventDrawer from "src/layouts/EventDrawer.vue";
 // axios.interceptors.request.use(request => {
 //     console.log('Starting Request', JSON.stringify(request, null, 2))
 //     return request
 // })
-
+const eventDrawer = ref(null);
 const $q = useQuasar()
 const token = ref('')
 const map = ref(null);
 const zoom = ref(9);
 const center = ref([47.41322, -1.219482]);
-const events = ref([
-    { location: { coordinates: [56.6449, 43.4954] }, name: "Marker1" },
-    { location: { coordinates: [56.6649, 43.4354] }, name: "Marker2" },
-    { location: { coordinates: [56.6849, 43.4554] }, name: "Marker3" }
-]);
+// const currentEvent = ref(null);
+const events = ref([]);
 
 async function setLocation() {
     await new Promise((res, rej) => {
@@ -85,7 +86,13 @@ async function setLocation() {
 // потенциальные риски того что карта загрузиться быстрее чем onMounted
 onMounted(() => {
     token.value = $q.cookies.get('token')
+    console.log("event page")
 })
+function showEvent(i) {
+    // console.log(i, events.value[i].name)
+    // currentEvent.value = events.value[i];
+    eventDrawer.value.showEvent(events.value[i]);
+}
 </script>
 <style>
 .q-page-container {

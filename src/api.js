@@ -55,7 +55,7 @@ function createUser($q, router, nickname, phone) {
 function getUser($q) {
   const token = $q.cookies.get('token');
   return axios
-    .get(process.env.VUE_APP_BASE_URL + '/user', {
+    .get(`${API_URL}/user`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -100,7 +100,7 @@ function updateUser(
   const token = $q.cookies.get('token');
   axios
     .put(
-      process.env.VUE_APP_BASE_URL + '/user',
+      `${API_URL}/user`,
       {
         nickname,
         phone,
@@ -149,7 +149,7 @@ function updateUser(
 function deleteUser($q) {
   const token = $q.cookies.get('token');
   axios
-    .delete(process.env.VUE_APP_BASE_URL + '/user', {
+    .delete(`${API_URL}/user`, {
       headers: {
         Authorization: 'Bearer ' + token,
       },
@@ -177,6 +177,40 @@ function deleteUser($q) {
     });
 }
 
+function createEvent($q, body) {
+  const token = $q.cookies.get('token');
+  axios
+    .post(`${API_URL}/event`, body, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
+    .then((response) => {
+      console.log(response);
+      if (response.status == 201) {
+        $q.notify('saved');
+      }
+    })
+    .catch((error) => {
+      console.log(error.response);
+      if (error.response.status == 404) {
+        $q.notify({
+          color: 'negative',
+          icon: 'report_problem',
+          message: 'The server is not available',
+        });
+      } else {
+        error.response.data.message.forEach((mes) => {
+          $q.notify({
+            color: 'negative',
+            icon: 'report_problem',
+            message: mes,
+          });
+        });
+      }
+    });
+}
+
 function handleError(error) {
   console.log(error.response);
 }
@@ -186,4 +220,5 @@ export default {
   getUser,
   updateUser,
   deleteUser,
+  createEvent,
 };
