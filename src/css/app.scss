@@ -1,151 +1,157 @@
 // app global css in SCSS form
 
 body {
-    color: $text1;
-    background-color: $bg1;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: $text1;
+  background-color: $bg1;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .text1 {
-    font-size: 25px;
+  font-size: 25px;
 }
 
 .icon {
-    height: 32px;
-    width: 32px;
-    background: url("icons/icons2.png"), linear-gradient(to right bottom, $grd-end, $grd-start, $grd-end);
-    background-size: auto 100%;
-    display: inline-block;
-    border-radius: 50%;
+  height: 32px;
+  width: 32px;
+  background: url('icons/icons2.png'),
+    linear-gradient(to right bottom, $grd-end, $grd-start, $grd-end);
+  background-size: auto 100%;
+  display: inline-block;
+  border-radius: 50%;
 }
 
 .icon-vk {
-    background-position: 2px 2px;
+  background-position: 2px 2px;
 }
 
 .icon-tg {
-    background-position: 33px 2px;
+  background-position: 33px 2px;
 }
 
 .q-footer {
-    display: flex;
-    align-items: center;
-    padding: 5px 20px;
+  display: flex;
+  align-items: center;
+  padding: 5px 20px;
 }
 
 .q-footer a {
-    margin-left: 5px;
-    cursor: pointer;
+  margin-left: 5px;
+  cursor: pointer;
 }
-
 
 .AuthPage,
 .SignupPage,
 .UserInfoPage,
 .UpdateUserPage,
-.EventLayout {
-    .container {
-        width: 250px;
-        background-color: $bg2;
-        border: 1px solid $grd-end;
-        border-radius: 10px;
-        display: flex;
-        flex-flow: column;
-        gap: 10px;
-        padding: 40px 20px;
+.EventLayout,
+.CreateEventPage {
+  .container {
+    width: 250px;
+    background-color: $bg2;
+    border: 1px solid $grd-end;
+    border-radius: 10px;
+    display: flex;
+    flex-flow: column;
+    gap: 10px;
+    padding: 40px 20px;
+  }
+
+  .profile {
+    display: block;
+    width: 208px;
+    height: 208px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid $border;
+    cursor: pointer;
+    background-size: contain;
+  }
+
+  input,
+  textarea {
+    background-color: $bg3;
+    border: 1px solid $border;
+    border-radius: 10px;
+    padding: 5px 15px;
+    width: 100%;
+    align-items: stretch;
+    color: $text1;
+  }
+
+  input:focus,
+  input:focus-visible,
+  textarea:focus,
+  textarea:focus-visible {
+    outline: 0;
+    border-color: $grd-start;
+  }
+
+  .button {
+    background: linear-gradient(
+      to right bottom,
+      $grd-end,
+      $grd-start,
+      $grd-end
+    );
+    border: none;
+    font-weight: 600;
+    color: $text1;
+    cursor: pointer;
+  }
+
+  .gradient {
+    background-size: 200% 200%;
+  }
+
+  @keyframes Animation {
+    0% {
+      background-position: 100% 100%;
     }
 
-    .profile {
-        display: block;
-        width: 208px;
-        height: 208px;
-        border-radius: 50%;
-        margin-bottom: 10px;
-        border: 2px solid $border;
-        cursor: pointer;
-        background-size: contain;
+    50% {
+      background-position: 0% 0%;
     }
 
-    input,
-    textarea {
-        background-color: $bg3;
-        border: 1px solid $border;
-        border-radius: 10px;
-        padding: 5px 15px;
-        width: 100%;
-        align-items: stretch;
-        color: $text1;
+    100% {
+      background-position: 100% 100%;
     }
+  }
 
-    input:focus,
-    input:focus-visible,
-    textarea:focus,
-    textarea:focus-visible {
-        outline: 0;
-        border-color: $grd-start;
-    }
+  .button:hover {
+    animation: Animation 5s infinite linear;
+  }
 
-    .button {
-        background: linear-gradient(to right bottom, $grd-end, $grd-start, $grd-end);
-        border: none;
-        font-weight: 600;
-        color: $text1;
-        cursor: pointer;
-    }
+  .deleteButton {
+    background: rgba(255, 0, 0, 0.616);
+  }
 
-    .gradient {
-        background-size: 200% 200%;
-    }
+  .link {
+    color: $grd-start;
+  }
 
-    @keyframes Animation {
-        0% {
-            background-position: 100% 100%
-        }
+  .link:active {
+    color: $grd-end;
+  }
 
-        50% {
-            background-position: 0% 0%
-        }
+  .note {
+    font-size: 12px;
+    color: $text2;
+  }
 
-        100% {
-            background-position: 100% 100%
-        }
-    }
+  .table caption {
+    font-size: 16px;
+  }
 
-    .button:hover {
-        animation: Animation 5s infinite linear;
-    }
+  .table {
+    border-collapse: collapse;
+  }
 
-    .deleteButton {
-        background: rgba(255, 0, 0, 0.616);
-    }
-
-    .link {
-        color: $grd-start;
-    }
-
-    .link:active {
-        color: $grd-end;
-    }
-
-    .note {
-        font-size: 12px;
-        color: $text2;
-    }
-
-    .table caption {
-        font-size: 16px;
-    }
-
-    .table {
-        border-collapse: collapse;
-    }
-
-    .table td {
-        border-bottom: 1px solid $border;
-        padding: 5px;
-    }
+  .table td {
+    border-bottom: 1px solid $border;
+    padding: 5px;
+  }
 }
 
 .UserInfoPage .container {
-    width: 350px;
+  width: 350px;
 }
